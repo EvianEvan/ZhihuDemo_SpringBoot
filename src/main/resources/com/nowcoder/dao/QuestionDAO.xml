@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 视频3：通过XML方式来配置 Mybatis dao （QuestionDAO）-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nowcoder.dao.QuestionDAO">
+    <sql id="table">question</sql>
+    <sql id="selectFields">id, title, content, comment_count,created_date,user_id
+    </sql>
+    <select id="selectLatestQuestions" resultType="com.nowcoder.model.Question">
+        SELECT
+        <include refid="selectFields"/>
+        FROM
+        <include refid="table"/>
+
+        -- 注意：此处体现了 Mybatis的 XML使用方式的优势：可以根据条件动态地改变SQL语句：
+        <if test="userId != 0">
+            WHERE user_id = #{userId}
+        </if>
+        --
+
+        ORDER BY id DESC
+        LIMIT #{offset},#{limit}
+    </select>
+</mapper>

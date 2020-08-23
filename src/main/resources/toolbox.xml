@@ -1,0 +1,12 @@
+<!-- 视频3：velocity的日期显示拓展功能配置文件-->
+
+<!-- velocity的日期显示拓展功能：在html中可以使用：
+     $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.question.createdDate})-->
+
+<toolbox>
+    <tool>
+        <key>date</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+</toolbox>
