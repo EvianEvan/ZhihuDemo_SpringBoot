@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-// 必看！！！重要！！！
 // 叶神 知乎项目高级课 02 代码主体：
 
 // 老的首页：

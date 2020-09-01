@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 // 视频4-1：重点：使用拦截器进行页面访问的控制：
 
-// HostHolder这个对象专门用来存放目前进行访问的用户；
+// HostHolder这个对象专门用来存放当前访问的用户；
 // （通过使用依赖注入来实现对当前用户的共享，所有的页面都可以直接通过注解的方式来引用它）
 
 // 由于多个已登录的用户可能同时访问同一个页面，所以需要使用java中的ThreadLocal来定义各个线程的本地变量；
