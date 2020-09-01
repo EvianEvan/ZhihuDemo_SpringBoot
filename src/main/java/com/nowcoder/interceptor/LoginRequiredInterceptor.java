@@ -10,15 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // 视频 4-2 重点：
-// 第二个拦截器：使用拦截器（interceptor）进行页面访问的控制 2：（）
+// 第二个拦截器：使用拦截器（interceptor）进行页面访问的控制 2：
 // 利用 当前访问用户的身份信息 实现对未登录用户的登录页跳转（同时要求登录/注册后需返回登录前访问的页面）；
+
+// 第二个拦截器的实现中用到了第一个拦截器在 hostHolder中保存的 user数据(即当前访问用户的身份信息)，所以必为第二个注册；
 
 // 注意：只有访问用户的个人页面(/user/*)时 才需要对当前访问用户进行未登录检测并进行跳转;
 // 例如：http://127.0.0.1:8080/user/8 ；
 // 这一设置需在 com/nowcoder/configuration/ZhihuWebConfiguration.java中进行配置；
 // PS:在使用第二个拦截器之前，用户的个人页面 无论是否已经登录/无论是谁 都可以随意访问，没有进行任何检测；
-
-// 第二个拦截器的实现中用到了第一个拦截器中 hostHolder保存的 user数据，所以必为第二个注册；
 
 //
 // 实现未登录跳转功能时涉及到的文件较多，且需要前后端配合：涉及文件如下：
