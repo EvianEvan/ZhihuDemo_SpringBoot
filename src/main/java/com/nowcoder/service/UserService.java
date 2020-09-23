@@ -3,7 +3,7 @@ package com.nowcoder.service;
 import com.nowcoder.dao.LoginTicketDAO;
 import com.nowcoder.dao.UserDAO;
 import com.nowcoder.model.User;
-import com.nowcoder.util.ZhihuMD5Util;
+import com.nowcoder.util.ZhihuUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +58,7 @@ public class UserService {
     // 生成一个随机字符作为 salt属性；
     user.setSalt(UUID.randomUUID().toString().substring(0, 5));
     // 把 密码 和 salt 连在一起后再对密码进行MD5加密，以提高密码的破解难度；
-    user.setPassword(ZhihuMD5Util.MD5(password + user.getSalt()));
+    user.setPassword(ZhihuUtil.MD5(password + user.getSalt()));
     String head =
         String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000));
     user.setHeadUrl(head);
@@ -94,7 +94,7 @@ public class UserService {
     }
 
     // 判断密码是否正确：
-    if (!ZhihuMD5Util.MD5(password + user.getSalt()).equals(user.getPassword())) {
+    if (!ZhihuUtil.MD5(password + user.getSalt()).equals(user.getPassword())) {
       map.put("msg", "密码错误！");
       return map;
     }
@@ -113,4 +113,7 @@ public class UserService {
   }
   // 视频 4-1添加：END；
 
+  public User selectByName(String name) {
+    return userDAO.selectByName(name);
+  }
 }

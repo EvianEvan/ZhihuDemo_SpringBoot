@@ -3,6 +3,44 @@ package com.nowcoder.controller;
 // 叶神 知乎项目高级课 视频3 ：1时15分：创建新首页：
 // 新的首页：
 
+// 视频 6重要总结：
+// 在 SpringBoot中进行业务开发的套路（步骤）（自底向上）：
+// 通用的业务开发流程（套路） (新功能模块开发的流程)：
+// 1. Database Column：设计数据库表：设计表的字段和索引;
+// 2. Model：定义模型：属性和数据库的字段相匹配;
+// 3. DAO：定义数据库的读取：和数据库进行交互;
+// 4. Service：包装服务（作为 DAO（数据库） 和 Controller（业务）之间的中间层）;
+// 5. Controller：业务入口;
+// 6. Test;（可以用 Postman手动测试，也可以自己写测试用例）
+//         （如http://127.0.0.1:8080/addComment ,注意要选择使用POST方法）
+
+// 业务开发的套路（步骤）：
+// 1. 创建数据库表：设计字段，索引：
+// 其中字段 status用来标记记录是否已被删除，1表示这条记录已被删除，默认正常状态为0；
+// CREATE TABLE `zhihu`.`comment` (
+//  `id` INT NOT NULL AUTO_INCREMENT,
+//  `user_id` INT NOT NULL,
+//  `content` TEXT NOT NULL,
+//  `created_date` DATETIME NOT NULL,
+//  `entity_type` INT NOT NULL,
+//  `entity_id` INT NOT NULL,
+//  `status` INT NOT NULL DEFAULT 0,
+//  PRIMARY KEY (`id`),
+//  INDEX `entity_index` (`entity_type` ASC, `entity_id` ASC) INVISIBLE,
+//  INDEX `user_index` (`user_id` ASC) VISIBLE);
+
+// 2. 创建模型：Model：（ MyBatis基于此文件和数据库进行匹配）
+// 新建 com/nowcoder/model/Comment.java 和 com/nowcoder/model/EntityType.java：
+// PS：模型的属性需要和数据库的字段相互匹配：
+
+// 3. 创建 DAO：用于操作数据库；
+// 新建 com/nowcoder/dao/CommentDAO.java：定义SQL语句；
+
+// 4. 创建 service：包装服务，作为 DAO（数据库）和 Controller（业务）之间的中间层；
+// 新建 com/nowcoder/service/CommentService.java；
+
+// 5. 创建 controller：映射路径，设置业务逻辑的入口：
+
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.Question;
 import com.nowcoder.model.ViewObject;
@@ -42,7 +80,7 @@ public class HomeController {
       path = {"/", "/index"},
       method = {RequestMethod.GET})
   public String index(Model model) {
-    model.addAttribute("vos", getQuestions(0, 0, 10));
+    model.addAttribute("vos", getQuestions(0, 0, 12));
 
     // 视频4-1测试：测试拦截器：
     hostHolder.getUser();

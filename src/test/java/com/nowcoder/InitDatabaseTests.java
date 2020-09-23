@@ -15,9 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Date;
 import java.util.Random;
 
-// 视频3：初始化数据库并测试：
+// 视频3：重要：初始化数据库并测试：（运行主程序前必须先运行此程序来初始化数据库，否则出错）
 
-// 重要：测试前会先执行 resources 中的 init-schema.sql进行数据库初始化;
+// 重要：会执行 resources 中的 init-schema.sql进行数据库的初始化;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ZhihuApplication.class)
