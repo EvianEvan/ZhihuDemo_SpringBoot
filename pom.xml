@@ -56,6 +56,15 @@
             <scope>test</scope>
         </dependency>
 
+        <!--  视频 7 添加：导入Redis驱动（Jedis） -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.10.2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- 导入mysql驱动 -->
         <!-- 注意：必须指定新版本，否则报错！-->
         <dependency>
@@ -73,14 +82,14 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <!--    <build>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                &lt;!&ndash;                <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </build>-->
 
 
     <repositories>
