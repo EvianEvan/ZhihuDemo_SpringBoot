@@ -57,8 +57,8 @@ package com.nowcoder.util;
 // #
 // #   In the example below the behaviour will be to save:
 // #   after 900 sec (15 min) if at least 1 key changed (如果900秒内至少有一个key被改变则进行备份（从内存同步到硬盘）)
-// #   after 300 sec (5 min) if at least 10 keys changed(如果300秒内至少有十个key被改变则进行备份)
-// #   after 60 sec if at least 10000 keys changed(如果60秒内至少有一万个key被改变则进行备份)
+// #   after 300 sec (5 min) if at least 10 keys changed (如果300秒内至少有十个key被改变则进行备份)
+// #   after 60 sec if at least 10000 keys changed (如果60秒内至少有一万个key被改变则进行备份)
 // #
 // #   Note: you can disable saving at all commenting all the "save" lines.
 //
@@ -81,8 +81,8 @@ package com.nowcoder.util;
 
 // 补充 5：Redis针对各个语言的客户端框架（https://redis.io/clients）：
 // Java 推荐 Jedis，本项目使用的就是该框架（https://github.com/xetorthio/jedis）；
-// Jedis支持集群（互为主备）和哨兵功能；
 //
+// Jedis支持集群（互为主备）和哨兵功能；
 // 使用前只需在pom.xml中添加依赖即可；
 //
 // Jedis的使用方法： To use it just:
