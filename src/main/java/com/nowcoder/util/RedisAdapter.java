@@ -83,25 +83,140 @@ package com.nowcoder.util;
 // Java 推荐 Jedis，本项目使用的就是该框架（https://github.com/xetorthio/jedis）；
 //
 // Jedis支持集群（互为主备）和哨兵功能；
-// 使用前只需在pom.xml中添加依赖即可；
+// 使用 Jedis前只需在pom.xml中添加依赖即可；
 //
 // Jedis的使用方法： To use it just:
+// 只是包装了一层，使用形式不同而已，只需看 redis文档：
 // Jedis jedis = new Jedis("localhost");
 // jedis.set("foo", "bar");
 // String value = jedis.get("foo");
 
 import org.springframework.beans.factory.InitializingBean;
+import redis.clients.jedis.Jedis;
 
 public class RedisAdapter implements InitializingBean {
 
   // 自定义 print 函数：
   public static void print(int index, Object obj) {
-    System.out.println(String.format("%d, %s", index, obj.toString()));
+    System.out.println(String.format("%d: %s", index, obj.toString()));
   }
 
   // 主函数：
   public static void main(String[] args) {
-    //    print();
+    // 创建连接， 默认端口为 6379端口, localhost:6379/6中的 6表示使用第 6个数据库；
+    Jedis jedis = new Jedis("redis://localhost:6379/6");
+    // flushDB表示将这个数据库删除，flushAll表示将所有数据库都删掉；
+    jedis.flushDB();
+
+    // Part 1: get 和 set:
+    // Jedis 只是对 Redis 中的命令进行了封装，只是形式不同而已；
+    // 相当于在 Redis命令行中执行：
+    // 查看所有数据库：
+    // keys *
+    // 选择第六个数据库：
+    // select 6
+    // 在数据库中 设置 Key-Value：
+    // set hello world
+    // 在数据库中 获取 Key-Value中的 value：
+    // get hello
+    jedis.set("hello", "world");
+    print(1, jedis.get("hello"));
+    //
+    // 重命名 key：
+    jedis.rename("hello", "new_hello");
+    print(1, jedis.get("new_hello"));
+    //
+    // 设置变量的过期时间：15秒：
+    // 这一功能的优势是你不需要去删除它，时间一到变量会自动被删除，
+    // 所以十分适合用来存放随机生成的验证码或验证短信，因为验证码没有保存的意义；
+    // 也适合用来做缓存系统，将从数据库中取出的数据缓存到 redis中
+    // （例如可以把一个对象转化成文本，然后把这个文本存到 redis中，使用时再把文本反序列化成一个对象）；
+    jedis.setex("temp_hello", 15, "nihao");
+    // 输出：
+    // 1: world
+    // 1: world
+
+    // Part 2: 数值型:
+    // 适合用来存放页面的浏览数或秒杀数据；
+    // 例如：用来存放页面的浏览数：
+    // 当出现高并发时，很多人同时浏览，如果去数据库中锁数据更改会影响性能）
+    jedis.set("pv", "10");
+    // 方式 a：给 pv加一：每次有人浏览时就给 pv加一；
+    jedis.incr("pv");
+    // 方式 b：给 pv 加/减 一个指定数值：
+    jedis.incrBy("pv", 10);
+    jedis.decrBy("pv", 1);
+    print(2, jedis.get("pv"));
+    // 输出：
+    // 2: 20
+
+    // Part 3: 针对当前数据库的 key/value 操作:
+    // 获取当前数据库中所有的 key；
+    print(3, jedis.keys("*"));
+    // 更多内容详见 redis官方文档中的 keys目录： 例如给 key设置一个过期时间等；
+    // 输出：
+    // 3: [temp_hello, new_hello, pv]
+
+    // Part 4: list: 类似于栈: 栈头在左边:
+    String listName = "list";
+    jedis.del(listName);
+    // 存数据：在 list中 从左边 开始插入十个数据： lpush即 list push：
+    for (int i = 0; i < 10; i++) {
+      jedis.lpush(listName, "new" + i);
+    }
+    // 取数据：取出 list中的数据：根据游标数字取，两边都是闭区间：
+    // 例如：用来存放关注某一问题的用户列表，可以方便地只显示 最近 关注该问题的十个人；
+    // (可只存这十个人的 id，取出来时再根据 id获取用户的其他信息)
+    print(4, jedis.lrange(listName, 0, 3));
+    // 取数据：也可以只取出数据的中间一段：
+    print(4, jedis.lrange(listName, 1, 3));
+    // 取数据：也可以只取出某一个元素：
+    print(4, jedis.lindex(listName, 1));
+    //
+    // 查看 list的长度：
+    print(4, jedis.llen(listName));
+    // 弹出并删除数据：
+    print(4, jedis.lpop(listName));
+    // 再次查看 list的长度：
+    print(4, jedis.llen(listName));
+    // 可以看出 list 和 栈 很相似；
+    //
+    // 注意：
+    // list 中的另一个重要 API blpop ： block list pop：
+    // 阻塞式弹出（在有可用弹出值之前一直保持阻塞，即同步式弹出）没有讲，下节课讲异步时会讲;
+    // 更多内容详见 redis官方文档；
+    //
+    // 输出：
+    // 4: [new9, new8, new7, new6]
+    // 4: [new8, new7, new6]
+    // 4: new8
+    // 4: 10
+    // 4: new9
+    // 4: 9
+
+    // Part 5: hash:
+    // 输出：
+    // 5: 20
+
+    // Part 6: get 和 set:
+    // 输出：
+    // 2: 20
+
+    // Part 7: get 和 set:
+    // 输出：
+    // 2: 20
+
+    // Part 8: get 和 set:
+    // 输出：
+    // 2: 20
+
+    // Part 9: get 和 set:
+    // 输出：
+    // 2: 20
+
+    // Part 1: get 和 set:
+    // 输出：
+    // 2: 20
   }
 
   // InitializingBean 接口函数：
